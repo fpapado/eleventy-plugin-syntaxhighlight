@@ -4,14 +4,17 @@ const HighlightLinesGroup = require("./HighlightLinesGroup");
 
 module.exports = function(content, language, highlightNumbers) {
   let highlightedContent;
-  if( language === "text" ) {
+  if (language === "text") {
     highlightedContent = content.trim();
   } else {
-    if( !Prism.languages[ language ] ) {
+    if (!Prism.languages[language]) {
       PrismLoader([language]);
     }
 
-    highlightedContent = Prism.highlight(content.trim(), Prism.languages[ language ]);
+    highlightedContent = Prism.highlight(
+      content.trim(),
+      Prism.languages[language]
+    );
   }
 
   let group = new HighlightLinesGroup(highlightNumbers);
@@ -20,5 +23,9 @@ module.exports = function(content, language, highlightNumbers) {
     return group.getLineMarkup(j, line);
   });
 
-  return `<pre class="language-${language}"><code class="language-${language}">` + lines.join("<br>") + "</code></pre>";
+  return (
+    `<pre class="language-${language}" data-lang="${language}" role="region" aria-label="code sample"><code class="language-${language}">` +
+    lines.join("<br>") +
+    "</code></pre>"
+  );
 };
